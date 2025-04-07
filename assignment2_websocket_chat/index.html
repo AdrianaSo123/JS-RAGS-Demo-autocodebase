@@ -1,0 +1,129 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple WebSocket Chat</title>
+    <style>
+        body { margin: 0; padding-bottom: 3rem; font-family: sans-serif; }
+        #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+        #input:focus { outline: none; }
+        #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages > li { padding: 0.5rem 1rem; }
+        #messages > li.system { background: #fffde7; color: #666; font-style: italic; }
+        #messages > li:not(.system):nth-child(odd) { background: #f0f0f0; }
+        .username { font-weight: bold; margin-right: 8px; }
+        #username-form { padding: 20px; text-align: center; margin-top: 20px; }
+        #username-input { padding: 8px; width: 200px; border-radius: 4px; border: 1px solid #ccc; }
+        #username-submit { padding: 8px 16px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Username Form -->
+    <div id="username-form">
+        <h2>Enter your username to join the chat</h2>
+        <input id="username-input" autocomplete="off" />
+        <button id="username-submit">Join</button>
+    </div>
+
+    <!-- Chat Interface (initially hidden) -->
+    <div id="chat-interface" class="hidden">
+        <ul id="messages"></ul>
+        <form id="form" action="">
+            <input id="input" autocomplete="off" placeholder="Type a message..." /><button>Send</button>
+        </form>
+    </div>
+
+    <!-- Include the Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Connect to the Socket.IO server (defaults to the server that served this page)
+        const socket = io();
+
+        // Get references to the HTML elements
+        const usernameForm = document.getElementById('username-form');
+        const usernameInput = document.getElementById('username-input');
+        const usernameSubmit = document.getElementById('username-submit');
+        const chatInterface = document.getElementById('chat-interface');
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        // --- Username Form Handling ---
+        usernameForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            setUsername();
+        });
+
+        usernameSubmit.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default button behavior
+            setUsername();
+        });
+
+        function setUsername() {
+            const username = usernameInput.value.trim();
+            if (username) {
+                // Emit 'set username' event to the server
+                socket.emit('set username', username);
+
+                // Hide username form and show chat interface
+                usernameForm.classList.add('hidden');
+                chatInterface.classList.remove('hidden');
+
+                // Focus the chat input
+                input.focus();
+            }
+        }
+
+        // --- Sending Messages ---
+        // Add an event listener for when the form is submitted
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission (page reload)
+            if (input.value) { // Check if the input field is not empty
+                // Emit a 'chat message' event to the server with the input value
+                socket.emit('chat message', input.value);
+                input.value = ''; // Clear the input field
+            }
+        });
+
+        // --- Receiving Messages ---
+        // Add an event listener for 'chat message' events coming FROM the server
+        socket.on('chat message', function(data) {
+            const item = document.createElement('li'); // Create a new list item element
+            
+            // Create username span
+            const usernameSpan = document.createElement('span');
+            usernameSpan.textContent = data.user + ':';
+            usernameSpan.className = 'username';
+            
+            // Append username and message
+            item.appendChild(usernameSpan);
+            item.appendChild(document.createTextNode(' ' + data.msg));
+            
+            messages.appendChild(item); // Add the list item to the messages list
+            window.scrollTo(0, document.body.scrollHeight); // Scroll to the bottom
+        });
+
+        // Add event listener for system messages (join/leave notifications, etc.)
+        socket.on('system message', function(msg) {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            item.className = 'system'; // Add a CSS class for styling
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        // --- Optional: Listen for connect/disconnect events on client ---
+        socket.on('connect', () => {
+            console.log('✅ Connected to server:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from server');
+            // Optionally, you could show a reconnect button or message here
+        });
+    </script>
+</body>
+</html>
