@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 3001; // Changed port to 3001
 
 // Keep track of connected users (socket.id -> username)
 const users = {};
+// Keep track of which users are currently typing
+const typingUsers = {};
 
 // --- ASYNC/PROMISE Demonstration ---
 /**
@@ -32,6 +34,11 @@ function fetchWelcomeMessage() {
             // If there was an error, you would call `reject(errorObject)`
         }, 1500);
     });
+}
+
+// Function to get a list of all connected users
+function getUserList() {
+    return Object.values(users);
 }
 
 // Serve the index.html file when someone visits the root URL
@@ -61,6 +68,9 @@ io.on('connection', async (socket) => {
     // `.broadcast` sends to everyone *except* the current socket
     socket.broadcast.emit('system message', `${username} has joined the chat!`);
 
+    // Broadcast updated user list to all clients
+    io.emit('user list update', getUserList());
+
     // --- ASYNC/AWAIT Demonstration ---
     try {
         // Use `await` to pause execution here until the Promise returned
@@ -86,7 +96,16 @@ io.on('connection', async (socket) => {
       console.log(`❌ User ${username} (${socket.id}) disconnected`);
       // Broadcast to other users that this user has left
       socket.broadcast.emit('system message', `${username} has left the chat.`);
-      delete users[socket.id]; // Remove user from our tracking object
+      
+      // Remove user from tracking objects
+      delete users[socket.id];
+      delete typingUsers[socket.id];
+      
+      // Broadcast updated user list to all clients
+      io.emit('user list update', getUserList());
+      
+      // If user was typing, let others know they stopped
+      socket.broadcast.emit('user stopped typing', username);
     } else {
         console.log(`❌ User ${socket.id} (no username set) disconnected`);
     }
@@ -98,13 +117,40 @@ io.on('connection', async (socket) => {
     const username = users[socket.id];
     if (username) {
       console.log(`💬 Message from ${username} (${socket.id}): ${msg}`);
+      
+      // Once a user sends a message, they're no longer typing
+      if (typingUsers[socket.id]) {
+        delete typingUsers[socket.id];
+        socket.broadcast.emit('user stopped typing', username);
+      }
+      
       // Broadcast the message object to ALL connected clients (including the sender)
       // Now includes the username!
       io.emit('chat message', { user: username, msg: msg });
     } else {
       // Handle case where message received before username is set (optional)
       console.log(`💬 Message from anonymous user (${socket.id}): ${msg}`);
-       socket.emit('system message', "Please set a username before sending messages.");
+      socket.emit('system message', "Please set a username before sending messages.");
+    }
+  });
+  
+  // Listen for typing event
+  socket.on('typing', () => {
+    const username = users[socket.id];
+    if (username && !typingUsers[socket.id]) {
+      typingUsers[socket.id] = username;
+      console.log(`✏️ ${username} is typing...`);
+      socket.broadcast.emit('user typing', username);
+    }
+  });
+  
+  // Listen for stop typing event
+  socket.on('stop typing', () => {
+    const username = users[socket.id];
+    if (username && typingUsers[socket.id]) {
+      delete typingUsers[socket.id];
+      console.log(`✏️ ${username} stopped typing`);
+      socket.broadcast.emit('user stopped typing', username);
     }
   });
 });

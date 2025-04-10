@@ -23,7 +23,9 @@
     "@tensorflow/tfjs": "^4.22.0",
     "chromadb": "^1.7.3",
     "dotenv": "^16.3.1",
+    "express": "^5.1.0",
     "langchain": "^0.1.20",
-    "sentence-tokenizer": "^1.0.1"
+    "sentence-tokenizer": "^1.0.1",
+    "socket.io": "^4.8.1"
   }
 }
