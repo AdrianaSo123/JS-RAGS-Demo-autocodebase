@@ -1,0 +1,40 @@
+Based on the descriptions above, consider the following:
+
+Evolution of Embeddings: Briefly describe the key limitation of TF-IDF that Word2Vec aimed to solve. 
+    -  The key limitation of TF-TDF was that it looked at each word as its own entity. It did not take into accont similiar
+    words like "car" and "automobile". It just assumed that words were on their own, while Word2Vec was better at understanding 
+    words and their meaning. In this model, it placed similar words closer together in the vector space.
+
+
+What limitation of sequential models (like LSTMs) did the Transformer architecture address with its attention mechanism?
+    - One limitation was that information had to be processed in order, meaning that certain information got lost by 
+    the time all of the steps happened. Transformer architecture allowed for any two steps to be connected at any given moment. 
+    This is important because it means that processes can occur in parallel. 
+
+
+BERT's Contribution: What was the significance of BERT's "bidirectional" pre-training compared to earlier models?
+    - One aspect of BERT that was significant was that it allowed the model to understand words both before and after. This
+    essentially means that rather than just understanding the word, it allows the program to understand the context of the word since 
+    it it now bidirectional. It allowed for the model to be more accurate. 
+
+
+BERT vs. Ada: Create a table summarizing the key differences (pros/cons) between using a locally run Sentence-BERT model versus 
+the OpenAI text-embedding-ada-002 API for generating embeddings in a project.
+    - 
+
+
+Chunking Scenario: Imagine you have a large PDF textbook (1000 pages) that you want to use for RAG.
+
+- Why is chunking absolutely necessary here (consider model input limits)?
+
+- Describe two different chunking strategies you could use.
+
+- What factors would influence your choice of chunk size and overlap?
+
+
+Model Selection Rationale: For each scenario below, which embedding approach (OpenAI Ada vs. Local SBERT) might be more suitable 
+and why? Justify your choice based on the factors discussed (cost, privacy, performance, quality, ease of use).
+
+- A startup building a quick prototype chatbot for public website FAQs.
+- A hospital developing an internal system to search sensitive patient record summaries (anonymized for the search, of course!).
+- A solo developer building a personal note-taking app with semantic search features, running only on their own powerful desktop PC.
