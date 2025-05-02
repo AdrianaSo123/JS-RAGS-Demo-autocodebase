@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependency directories
 node_modules/
 npm-debug.log
@@ -55,3 +56,10 @@ chromadb/
 .Trashes
 ehthumbs.db
 Thumbs.db
+=======
+node_modules/
+.env
+.DS_Store
+npm-debug.log
+netlify-functions/
+>>>>>>> a1b8c1576873c78cc1a9cea6ee8c3c91244448d1
