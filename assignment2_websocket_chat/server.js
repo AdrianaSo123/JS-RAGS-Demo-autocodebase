@@ -130,7 +130,7 @@ io.on('connection', async (socket) => {
     } else {
       // Handle case where message received before username is set (optional)
       console.log(`💬 Message from anonymous user (${socket.id}): ${msg}`);
-      socket.emit('system message', "Please set a username before sending messages.");
+       socket.emit('system message', "Please set a username before sending messages.");
     }
   });
   
