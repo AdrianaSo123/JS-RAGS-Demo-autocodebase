@@ -1,0 +1,21 @@
+# Understanding RAG Systems
+
+Retrieval-Augmented Generation (RAG) is a technique that enhances large language models by providing them with additional context retrieved from external sources before generating a response.
+
+## Key Components of RAG
+
+1. **Document Ingestion**: Converting various document formats into processable text.
+2. **Chunking**: Breaking down documents into smaller, manageable pieces.
+3. **Embedding Generation**: Converting text chunks into vector representations.
+4. **Vector Storage**: Storing embeddings in a vector database for efficient similarity search.
+5. **Retrieval**: Finding relevant information based on query similarity.
+6. **Context Augmentation**: Enhancing the prompt with retrieved information.
+7. **Response Generation**: Creating a final response using the augmented context.
+
+## Benefits of RAG
+
+- Reduces hallucinations by grounding responses in factual information
+- Enables access to domain-specific knowledge
+- Updates model knowledge without retraining
+- Improves transparency through citation of sources
+- Enhances privacy by keeping sensitive data in controlled environments

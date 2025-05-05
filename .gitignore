@@ -1,5 +1,65 @@
+<<<<<<< HEAD
+# Dependency directories
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Coverage directory
+coverage/
+
+# Build files
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache directories
+.npm
+.eslintcache
+.cache
+.parcel-cache
+
+# Chroma data
+.chroma/
+chromadb/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+=======
 node_modules/
 .env
 .DS_Store
 npm-debug.log
 netlify-functions/
+>>>>>>> a1b8c1576873c78cc1a9cea6ee8c3c91244448d1

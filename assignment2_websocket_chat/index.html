@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple WebSocket Chat</title>
+    <style>
+        body { margin: 0; padding-bottom: 3rem; font-family: sans-serif; }
+        #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+        #input:focus { outline: none; }
+        #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages > li { padding: 0.5rem 1rem; }
+        #messages > li.system { background: #fffde7; color: #666; font-style: italic; }
+        #messages > li:not(.system):nth-child(odd) { background: #f0f0f0; }
+        .username { font-weight: bold; margin-right: 8px; }
+        #username-form { padding: 20px; text-align: center; margin-top: 20px; }
+        #username-input { padding: 8px; width: 200px; border-radius: 4px; border: 1px solid #ccc; }
+        #username-submit { padding: 8px 16px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .hidden { display: none; }
+        
+        /* Polished typing indicator styles */
+        #typing-indicator {
+            padding: 6px 12px;
+            color: #555;
+            font-style: italic;
+            background: #f0f8ff; /* Light blue background */
+            border-top: 1px solid #ddd;
+            min-height: 24px;
+            position: fixed;
+            bottom: 3.2rem; /* Position it above the input form */
+            left: 0;
+            right: 200px; /* Account for the user list width */
+            z-index: 100;
+            transition: opacity 0.3s ease;
+            opacity: 0; /* Start hidden */
+        }
+        
+        #typing-indicator.visible {
+            opacity: 1;
+        }
+        
+        #user-list-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 200px;
+            background: #f0f0f0;
+            border-left: 1px solid #ddd;
+            height: calc(100% - 3rem);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        #user-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #user-list li {
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            background: #fff;
+            border-radius: 3px;
+            border-left: 3px solid #333;
+        }
+        
+        #chat-area {
+            margin-right: 200px; /* Make room for user list */
+            padding-bottom: 3.5rem; /* Space for the typing indicator */
+        }
+        
+        h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        /* Special styling for typing messages in chat */
+        .typing-message {
+            background-color: #f0f8ff !important;
+            color: #666 !important;
+            font-style: italic !important;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Username Form -->
+    <div id="username-form">
+        <h2>Enter your username to join the chat</h2>
+        <input id="username-input" autocomplete="off" />
+        <button id="username-submit">Join</button>
+    </div>
+
+    <!-- Chat Interface (initially hidden) -->
+    <div id="chat-interface" class="hidden">
+        <div id="chat-area">
+            <ul id="messages"></ul>
+            <!-- The typing indicator div -->
+            <div id="typing-indicator"></div>
+            <form id="form" action="">
+                <input id="input" autocomplete="off" placeholder="Type a message..." /><button>Send</button>
+            </form>
+        </div>
+        
+        <!-- User List Section -->
+        <div id="user-list-container">
+            <h3>Online Users</h3>
+            <ul id="user-list"></ul>
+        </div>
+    </div>
+
+    <!-- Include the Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Connect to the Socket.IO server
+        const socket = io();
+
+        // Get references to the HTML elements
+        const usernameForm = document.getElementById('username-form');
+        const usernameInput = document.getElementById('username-input');
+        const usernameSubmit = document.getElementById('username-submit');
+        const chatInterface = document.getElementById('chat-interface');
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const userList = document.getElementById('user-list');
+        
+        // Typing indicator state management
+        let typingTimeout;
+        const typingUsers = new Set();
+        
+        // Update the typing indicator display - polished version
+        function updateTypingIndicator() {
+            if (typingUsers.size === 0) {
+                typingIndicator.textContent = '';
+                typingIndicator.classList.remove('visible');
+                console.log('No users typing, hiding indicator');
+            } else {
+                if (typingUsers.size === 1) {
+                    const typingUser = Array.from(typingUsers)[0];
+                    typingIndicator.textContent = `${typingUser} is typing...`;
+                    console.log(`Typing indicator updated: ${typingUser} is typing...`);
+                } else if (typingUsers.size === 2) {
+                    typingIndicator.textContent = `${Array.from(typingUsers).join(' and ')} are typing...`;
+                    console.log(`Typing indicator updated: ${Array.from(typingUsers).join(' and ')} are typing...`);
+                } else {
+                    typingIndicator.textContent = 'Several people are typing...';
+                    console.log(`Typing indicator updated: Several people are typing...`);
+                }
+                
+                // Show the indicator with a nice transition
+                typingIndicator.classList.add('visible');
+            }
+        }
+
+        // --- Username Form Handling ---
+        usernameForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            setUsername();
+        });
+
+        usernameSubmit.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default button behavior
+            setUsername();
+        });
+
+        function setUsername() {
+            const username = usernameInput.value.trim();
+            if (username) {
+                // Emit 'set username' event to the server
+                socket.emit('set username', username);
+
+                // Hide username form and show chat interface
+                usernameForm.classList.add('hidden');
+                chatInterface.classList.remove('hidden');
+
+                // Focus the chat input
+                input.focus();
+            }
+        }
+
+        // --- Typing Indicator Handling ---
+        input.addEventListener('input', function(event) {
+            // If there's content in the input field, emit typing
+            if (input.value.trim().length > 0) {
+                socket.emit('typing');
+                console.log('Sent typing event to server');
+                
+                // Clear any existing timeout
+                clearTimeout(typingTimeout);
+                
+                // Set a new timeout to emit 'stop typing' after 2 seconds of inactivity
+                typingTimeout = setTimeout(() => {
+                    socket.emit('stop typing');
+                    console.log('Sent stop typing event to server (timeout)');
+                }, 2000);
+            } else {
+                // If input is empty, stop typing
+                clearTimeout(typingTimeout);
+                socket.emit('stop typing');
+                console.log('Sent stop typing event to server (empty input)');
+            }
+        });
+        
+        // Also handle blur event for when the user clicks away
+        input.addEventListener('blur', function() {
+            clearTimeout(typingTimeout);
+            socket.emit('stop typing');
+            console.log('Sent stop typing event to server (blur)');
+        });
+
+        // --- Sending Messages ---
+        // Add an event listener for when the form is submitted
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission (page reload)
+            if (input.value) { // Check if the input field is not empty
+                // Emit a 'chat message' event to the server with the input value
+                socket.emit('chat message', input.value);
+                
+                // Clear typing indicator since we're sending the message
+                clearTimeout(typingTimeout);
+                socket.emit('stop typing');
+                console.log('Sent stop typing event to server (message sent)');
+                
+                input.value = ''; // Clear the input field
+            }
+        });
+
+        // --- Receiving Messages ---
+        // Add an event listener for 'chat message' events coming FROM the server
+        socket.on('chat message', function(data) {
+            const item = document.createElement('li'); // Create a new list item element
+            
+            // Create username span
+            const usernameSpan = document.createElement('span');
+            usernameSpan.textContent = data.user + ':';
+            usernameSpan.className = 'username';
+            
+            // Append username and message
+            item.appendChild(usernameSpan);
+            item.appendChild(document.createTextNode(' ' + data.msg));
+            
+            messages.appendChild(item); // Add the list item to the messages list
+            window.scrollTo(0, document.body.scrollHeight); // Scroll to the bottom
+        });
+
+        // Add event listener for system messages (join/leave notifications, etc.)
+        socket.on('system message', function(msg) {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            item.className = 'system'; // Add a CSS class for styling
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        
+        // --- Typing indicator event listeners - polished without alerts ---
+        socket.on('user typing', function(username) {
+            console.log(`RECEIVED: ${username} is typing...`);
+            typingUsers.add(username);
+            updateTypingIndicator();
+            
+            // Optional: Also show as a small message with a unique ID
+            const typingMsgId = `typing-msg-${username}`;
+            
+            // Check if we already have a typing message for this user
+            if (!document.getElementById(typingMsgId)) {
+                const item = document.createElement('li');
+                item.id = typingMsgId;
+                item.textContent = `${username} is typing...`;
+                item.className = 'system typing-message';
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        });
+        
+        socket.on('user stopped typing', function(username) {
+            console.log(`RECEIVED: ${username} stopped typing`);
+            typingUsers.delete(username);
+            updateTypingIndicator();
+            
+            // Remove the typing message if it exists
+            const typingMsg = document.getElementById(`typing-msg-${username}`);
+            if (typingMsg) {
+                messages.removeChild(typingMsg);
+            }
+        });
+        
+        // --- User list update handler ---
+        socket.on('user list update', function(users) {
+            // Clear current user list
+            userList.innerHTML = '';
+            
+            // Add each user to the list
+            users.forEach(username => {
+                const userItem = document.createElement('li');
+                userItem.textContent = username;
+                userList.appendChild(userItem);
+            });
+        });
+
+        // --- Connect/disconnect events ---
+        socket.on('connect', () => {
+            console.log('✅ Connected to server:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from server');
+        });
+    </script>
+</body>
+</html>

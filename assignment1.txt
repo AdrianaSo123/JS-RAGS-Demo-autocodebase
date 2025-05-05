@@ -1,0 +1,70 @@
+Based on the descriptions above, consider the following:
+
+Evolution of Embeddings: Briefly describe the key limitation of TF-IDF that Word2Vec aimed to solve. 
+    -  The key limitation of TF-TDF was that it looked at each word as its own entity. It did not take into accont similiar
+    words like "car" and "automobile". It just assumed that words were on their own, while Word2Vec was better at understanding 
+    words and their meaning. In this model, it placed similar words closer together in the vector space.
+
+
+What limitation of sequential models (like LSTMs) did the Transformer architecture address with its attention mechanism?
+    - One limitation was that information had to be processed in order, meaning that certain information got lost by 
+    the time all of the steps happened. Transformer architecture allowed for any two steps to be connected at any given moment. 
+    This is important because it means that processes can occur in parallel. 
+
+
+BERT's Contribution: What was the significance of BERT's "bidirectional" pre-training compared to earlier models?
+    - One aspect of BERT that was significant was that it allowed the model to understand words both before and after. This
+    essentially means that rather than just understanding the word, it allows the program to understand the context of the word since 
+    it it now bidirectional. It allowed for the model to be more accurate. 
+
+
+BERT vs. Ada: Create a table summarizing the key differences (pros/cons) between using a locally run Sentence-BERT model versus 
+the OpenAI text-embedding-ada-002 API for generating embeddings in a project.
+    
+        Feature     	    BERT Variants	                    OpenAI Ada-002
+        Hosting	            Local or self-hosted	            Cloud API (OpenAI)
+        Cost	            Free model + hardware costs         Pay-per-token
+        Privacy	            High (data stays local)	            Lower (data sent to OpenAI)
+        Context Window	    ~512 tokens	                        8191 tokens
+        Dimensionality	    384-768                             typically	1536
+        Setup	            Requires technical setup	        Simple API calls
+        Customization	    Can be fine-tuned	                No customization
+        Performance	        Depends on hardware	                Fast, consistent
+
+
+Chunking Scenario: Imagine you have a large PDF textbook (1000 pages) that you want to use for RAG.
+
+- Why is chunking absolutely necessary here (consider model input limits)?
+
+- Describe two different chunking strategies you could use.
+
+- What factors would influence your choice of chunk size and overlap?
+
+        - Chunking is important because only so much information can be processed at a time. For examplem, Open-API can only process
+        8191 tokens, which is only about a few pages long. It is not able to process the entire textbook all at once. 
+        - The two chunking stategies that you could use is my token/word and by sentence/paragraph. The first method uses a consistent
+        number of tokens, however, one downside of this is that it can cut through different senetences or paragraphs. This would mean 
+        that the context can be lost. Paragraph chunking is more helpful because it can better understand what the section is saying. This
+        type of chunking does not use a standard amount of tokens and can vary a lot more. 
+        - In order to chosee which type of chunking method to use, you should see how specific you need the information to be or
+        if a general understand is fine (paragraph). You also need to determine based on the topic how much consistency you want
+        based on the section.
+
+
+Model Selection Rationale: For each scenario below, which embedding approach (OpenAI Ada vs. Local SBERT) might be more suitable 
+and why? Justify your choice based on the factors discussed (cost, privacy, performance, quality, ease of use).
+
+- A startup building a quick prototype chatbot for public website FAQs.
+    - OpenAI Ada because it is much quicker as they do not need to worry about infastructure. Because of the mode'ls pay-per-use, 
+    it is best suited for startups since it is cost-effective. There are also not as strong of privacy concerns as it is a public forum,
+
+
+- A hospital developing an internal system to search sensitive patient record summaries (anonymized for the search, of course!).
+    - SBERT because privacy is a bigger issue than the public forum. BERT ensures that the data is protected. It is also more practical 
+    since the hospital will continue to grow. Rather than a pay-per-use model, it makes more sense for the hospital to spend more upfront
+    since there can be a huge influx of patients over time. 
+
+- A solo developer building a personal note-taking app with semantic search features, running only on their own powerful desktop PC.
+    - BERT because it allows the app to work without internet connectivity. It is also more cost efficient since there is a one-time 
+    setup cost of SBERT avoids ongoing API expenses that would make the app too expensive for personal use. It is also important for
+    privacy concerns as personal notes often contain private information users wouldn't want sent to a third party. 

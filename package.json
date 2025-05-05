@@ -1,15 +1,33 @@
 {
-  "name": "ai-ux-chat",
+<<<<<<< HEAD
+  "name": "js-rag-demo",
   "version": "1.0.0",
-  "description": "Chat with an AI UX professional.",
-  "main": "server.js",
+  "description": "RAG demo using LangChain, ChromaDB and OpenAI API",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "rag",
+    "langchain",
+    "openai",
+    "chromadb",
+    "vector-database"
+  ],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
+    "@langchain/community": "^0.0.32",
+    "@langchain/openai": "^0.0.14",
+    "@tensorflow/tfjs": "^4.22.0",
+    "chromadb": "^1.7.3",
+    "dotenv": "^16.3.1",
     "express": "^5.1.0",
-    "socket.io": "^4.8.1",
+    "langchain": "^0.1.20",
     "openai": "^4.0.0",
-    "dotenv": "^16.4.5"
+    "sentence-tokenizer": "^1.0.1",
+    "socket.io": "^4.8.1"
   }
 }
