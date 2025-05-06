@@ -1,12 +1,11 @@
 {
-<<<<<<< HEAD
-  "name": "js-rag-demo",
+  "name": "ai-ux-chat",
   "version": "1.0.0",
   "description": "RAG demo using LangChain, ChromaDB and OpenAI API",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
+
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -31,3 +30,4 @@
     "socket.io": "^4.8.1"
   }
 }
+
