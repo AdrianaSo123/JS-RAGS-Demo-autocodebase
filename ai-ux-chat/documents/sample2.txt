@@ -1,0 +1,30 @@
+# Vector Databases and Embeddings
+
+Vector databases are specialized databases designed to store and search vector embeddings efficiently. They are a critical component in modern AI applications that leverage semantic search and similarity matching.
+
+## What are Embeddings?
+
+Embeddings are numerical representations of data (text, images, audio) in a high-dimensional space. For text:
+
+- Words or chunks of text are converted into vectors of floating-point numbers
+- Similar concepts end up close to each other in the vector space
+- This enables semantic search beyond simple keyword matching
+
+## Vector Database Operations
+
+1. **Indexing**: Creating efficient data structures for storing vectors
+2. **Similarity Search**: Finding vectors close to a query vector using distance metrics like:
+   - Euclidean distance
+   - Cosine similarity
+   - Dot product
+3. **Approximate Nearest Neighbors (ANN)**: Algorithms that trade perfect accuracy for speed
+4. **Filtering**: Combining vector search with metadata filtering
+
+## Popular Vector Databases
+
+- Chroma
+- Pinecone
+- Milvus  
+- Weaviate
+- FAISS (Facebook AI Similarity Search)
+- Qdrant
