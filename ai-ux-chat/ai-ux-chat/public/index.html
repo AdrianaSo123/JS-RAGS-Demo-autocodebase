@@ -2,284 +2,648 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI UX Professional Chat</title>
-  <!-- Portfolio Branding: Inter & IBM Plex Mono from Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,500,600,700&display=swap" rel="stylesheet">
+  <title>UX AI Studio | Adriana So Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #0ea5e9;
-      --primary-dark: #0369a1;
-      --secondary: #22c55e;
-      --secondary-dark: #15803d;
-      --accent: #a855f7;
-      --neutral: #1f2937;
-      --background: #f9fafb;
-      --foreground: #1f2937;
-      --radius: 0.5rem;
-    }
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--background);
+    * {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      width: 100vw;
-      overflow-x: hidden;
-      overflow-y: hidden;
-      color: var(--foreground);
-    }
-    #chat {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-      background: #fff;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      min-width: 0;
-      overflow-x: hidden;
-      max-width: 100vw;
       box-sizing: border-box;
     }
-    header {
-      text-align: center;
-      padding: 32px 0 12px 0;
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 1px 8px #0001;
-      flex-shrink: 0;
-      border-bottom-left-radius: var(--radius);
-      border-bottom-right-radius: var(--radius);
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: white;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
-}
-header h2 {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  margin: 0 0 4px 0;
-  color: #fff;
-}
-.subtitle {
-  font-size: 1.08rem;
-  color: #dbeafe;
-  margin: 0 0 10px 0;
-  font-family: 'Inter', Arial, sans-serif;
-}
-#messages {
-  list-style: none;
-  padding: 32px 18px 0 18px;
-  margin: 0;
-  flex: 1 1 0%;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: #fff;
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-#messages li {
-  display: flex;
-  margin: 0;
-}
-.bubble {
-  padding: 16px 22px;
-  border-radius: var(--radius);
-  max-width: 75vw;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-  font-size: 1.08rem;
-  box-shadow: 0 2px 8px #0001;
-  margin-bottom: 2px;
-  box-sizing: border-box;
-  font-family: 'Inter', Arial, sans-serif;
-}
-.user {
-  justify-content: flex-end;
-}
-.user .bubble {
-  background: var(--primary);
-  color: #fff;
-  border-bottom-right-radius: 6px;
-  border-top-right-radius: var(--radius);
-  border-top-left-radius: var(--radius);
-  border-bottom-left-radius: var(--radius);
-  align-self: flex-end;
-}
-.ai {
-  justify-content: flex-start;
-}
-.ai .bubble {
-  background: var(--secondary);
-  color: #fff;
-  border-bottom-left-radius: 6px;
-  border-top-right-radius: var(--radius);
-  border-top-left-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
-  align-self: flex-start;
-}
-.bubble.typing {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 44px;
-  min-height: 24px;
-  background: linear-gradient(90deg, #eaf6f1 0%, #f0f7e5 100%);
-}
-.bubble.typing .dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin: 0 2px;
-  border-radius: 50%;
-  background: #b2d9c8;
-  opacity: 0.7;
-  animation: typing-bounce 1.2s infinite both;
-}
-.bubble.typing .dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.bubble.typing .dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-@keyframes typing-bounce {
-  0%, 80%, 100% { transform: scale(0.9); opacity: 0.7; }
-  40% { transform: scale(1.2); opacity: 1; }
-}
 
-#form {
-  display: flex;
-  gap: 10px;
-  padding: 18px 18px 24px 18px;
-  background: var(--background);
-  box-shadow: 0 -1px 8px #0001;
-  margin: 0;
-  flex-shrink: 0;
-  border-top: 1.5px solid var(--primary);
-}
-#input {
-  flex: 1;
-  padding: 14px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--primary);
-  font-size: 1rem;
-  background: #fff;
-  outline: none;
-  transition: border 0.2s;
-  font-family: 'Inter', Arial, sans-serif;
-  color: var(--foreground);
-}
-#input:focus {
-  border: 1.5px solid var(--secondary);
-  box-shadow: 0 0 0 2px var(--secondary-dark, #15803d22);
-}
-#send {
-  padding: 13px 26px;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  border-radius: var(--radius);
-  font-size: 1rem;
-  box-shadow: 0 2px 6px #0001;
-  cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#send:disabled {
-  background: var(--neutral);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-footer {
-  text-align: center;
-  margin-top: 18px;
-  color: #7a8ca6;
-  font-size: 0.98rem;
-}
+    .main-container {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      padding: 2rem;
+      gap: 2rem;
+    }
 
+    .chat-panel {
+      flex: 1;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chat-header p {
+      opacity: 0.9;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background: white;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      animation: messageSlide 0.3s ease-out;
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .message.ai .message-avatar {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+    }
+
+    .message-bubble {
+      max-width: 75%;
+      padding: 1rem 1.25rem;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .message.ai .message-bubble {
+      background: #f8fafc;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 6px;
+    }
+
+    .chat-input-area {
+      padding: 1.5rem;
+      background: white;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .chat-input-form {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      background: #fafbfc;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+    }
+
+    .chat-send-btn {
+      padding: 1rem 1.25rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 80px;
+    }
+
+    .chat-send-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .analysis-panel {
+      flex: 1;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .analysis-header {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .analysis-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .analysis-header p {
+      opacity: 0.9;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .analysis-content {
+      flex: 1;
+      padding: 2rem;
+      background: white;
+      overflow-y: auto;
+    }
+
+    .upload-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fafbfc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-zone:hover {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f8fafc, #f0f4ff);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    }
+
+    .upload-zone.dragover {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+      border-style: solid;
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+      opacity: 0.7;
+    }
+
+    .upload-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-subtext {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .context-input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      margin: 1.5rem 0;
+      background: #fafbfc;
+      transition: all 0.2s ease;
+    }
+
+    .context-input:focus {
+      outline: none;
+      border-color: #f093fb;
+      box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+      background: white;
+    }
+
+    .analyze-button {
+      width: 100%;
+      padding: 1.25rem 2rem;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .analyze-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+    }
+
+    .analyze-button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .critique-result {
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      border-left: 4px solid #667eea;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      animation: resultSlide 0.5s ease-out;
+    }
+
+    @keyframes resultSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-message {
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status-success {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      color: #166534;
+      border: 1px solid #22c55e;
+    }
+
+    .status-error {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      color: #dc2626;
+      border: 1px solid #f87171;
+    }
+
+    .image-preview {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .portfolio-badge {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #f8fafc;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+      z-index: 100;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+      }
+      
+      .chat-panel, .analysis-panel {
+        min-height: 50vh;
+      }
+      
+      .chat-header h1, .analysis-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .portfolio-badge {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="chat">
-  <header>
-    <h2>AI UX Professional Chat</h2>
-    <div class="subtitle">by Adriana So — Portfolio Edition</div>
-  </header>
-  <ul id="messages"></ul>
-  <form id="form" autocomplete="off" spellcheck="false">
-    <input id="input" autocomplete="off" placeholder="Ask your UX question..." aria-label="Type your UX question here" />
-    <button id="send" aria-label="Send Message" title="Send Message" type="submit" style="display: flex; align-items: center; justify-content: center;">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;"><path d="M2 11L20 2L11 20L10 13L2 11Z" fill="#fff" stroke="#227a4d" stroke-width="1.5" stroke-linejoin="round"/></svg>
-    </button>
-</form>
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  const socket = io();
-    const form = document.getElementById('form');
-    const input = document.getElementById('input');
-    const messages = document.getElementById('messages');
-    let typingIndicator = null;
+  <div class="main-container">
+    <div class="chat-panel">
+      <div class="chat-header">
+        <h1>💬 UX Consultant AI</h1>
+        <p>Professional UX guidance powered by GPT-4</p>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <div class="message ai">
+          <div class="message-avatar">AI</div>
+          <div class="message-bubble">
+            Hi! I'm your AI UX consultant. Ask me about user experience, design principles, accessibility, or any UX challenges you're facing. I'm here to help! 🚀
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-input-area">
+        <form class="chat-input-form" id="chatForm">
+          <input 
+            type="text" 
+            class="chat-input" 
+            id="chatInput" 
+            placeholder="Ask about UX principles, user research, design patterns..."
+            autocomplete="off"
+          >
+          <button type="submit" class="chat-send-btn">Send</button>
+        </form>
+      </div>
+    </div>
 
-    form.addEventListener('submit', function(e) {
+    <div class="analysis-panel">
+      <div class="analysis-header">
+        <h2>🎨 Design Analysis</h2>
+        <p>Upload designs for professional UX critique</p>
+      </div>
+      
+      <div class="analysis-content">
+        <div class="upload-zone" onclick="document.getElementById('fileInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+          <span class="upload-icon">🎨</span>
+          <div class="upload-text">Drop your design here</div>
+          <div class="upload-subtext">PNG, JPG, WebP • Max 10MB</div>
+          <input type="file" id="fileInput" class="hidden" accept="image/*">
+        </div>
+        
+        <div id="uploadStatus" class="hidden"></div>
+        <div id="imagePreview" class="hidden"></div>
+        
+        <input 
+          type="text" 
+          class="context-input" 
+          id="contextInput" 
+          placeholder="Optional: Tell me about your design goals, target users, or specific concerns..."
+        >
+        
+        <button class="analyze-button" id="analyzeBtn" disabled>
+          🔍 Analyze Design
+        </button>
+        
+        <div id="critiqueResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="portfolio-badge">
+    ✨ Built by Adriana So
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let uploadedFile = null;
+
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!input.value) return;
-      const msg = input.value;
-      addMessage(msg, 'user');
-      showTypingIndicator();
-      socket.emit('user message', msg);
+      const input = document.getElementById('chatInput');
+      if (!input.value.trim()) return;
+      
+      addMessage(input.value, 'user');
+      socket.emit('user message', input.value);
       input.value = '';
     });
 
     socket.on('ai message', function(msg) {
-      removeTypingIndicator();
       addMessage(msg, 'ai');
     });
 
-    function addMessage(msg, who) {
-      const li = document.createElement('li');
-      li.className = who;
+    function addMessage(text, sender) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message ' + sender;
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = sender === 'user' ? 'You' : 'AI';
+      
       const bubble = document.createElement('div');
-      bubble.className = 'bubble';
-      bubble.textContent = msg;
-      li.appendChild(bubble);
-      messages.appendChild(li);
-      messages.scrollTop = messages.scrollHeight;
+      bubble.className = 'message-bubble';
+      bubble.innerHTML = text.replace(/\n/g, '<br>');
+      
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(bubble);
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function showTypingIndicator() {
-      removeTypingIndicator();
-      typingIndicator = document.createElement('li');
-      typingIndicator.className = 'ai';
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble typing';
-      bubble.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-      typingIndicator.appendChild(bubble);
-      messages.appendChild(typingIndicator);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function removeTypingIndicator() {
-      if (typingIndicator && typingIndicator.parentNode) {
-        typingIndicator.parentNode.removeChild(typingIndicator);
-        typingIndicator = null;
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        uploadFile(e.target.files[0]);
       }
+    });
+
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.currentTarget.classList.add('dragover');
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove('dragover');
+    }
+
+    function handleDrop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('dragover');
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        uploadFile(files[0]);
+      }
+    }
+
+    function uploadFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showStatus('Please upload an image file (PNG, JPG, WebP)', 'error');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('File too large. Please upload an image under 10MB', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('design', file);
+      
+      showStatus('<span class="loading-spinner"></span>Uploading...', '');
+      
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Upload failed: ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          uploadedFile = data;
+          showStatus('✅ Upload successful!', 'success');
+          
+          const preview = document.getElementById('imagePreview');
+          preview.innerHTML = '<img src="' + data.url + '" alt="Uploaded design">';
+          preview.classList.remove('hidden');
+          
+          document.getElementById('analyzeBtn').disabled = false;
+        } else {
+          throw new Error(data.error || 'Upload failed');
+        }
+      })
+      .catch(error => {
+        console.error('Upload error:', error);
+        showStatus('Upload failed: ' + error.message, 'error');
+      });
+    }
+
+    function showStatus(message, type) {
+      const status = document.getElementById('uploadStatus');
+      status.innerHTML = message;
+      status.className = type ? 'status-message status-' + type : 'status-message';
+      status.classList.remove('hidden');
+    }
+
+    document.getElementById('analyzeBtn').addEventListener('click', function() {
+      if (!uploadedFile) return;
+      
+      this.disabled = true;
+      this.innerHTML = '<span class="loading-spinner"></span>Analyzing Design...';
+      
+      const results = document.getElementById('critiqueResults');
+      results.innerHTML = '<div style="text-align: center; padding: 2rem; color: #6b7280;"><div class="loading-spinner" style="width: 2rem; height: 2rem; margin: 0 auto 1rem;"></div><div>AI is analyzing your design...</div><div style="font-size: 0.875rem; margin-top: 0.5rem;">This may take 10-30 seconds</div></div>';
+      
+      socket.emit('analyze design', {
+        filename: uploadedFile.filename,
+        userPrompt: document.getElementById('contextInput').value
+      });
+    });
+
+    socket.on('design critique', function(data) {
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('analyzeBtn').innerHTML = '🔍 Analyze Design';
+      
+      document.getElementById('critiqueResults').innerHTML = 
+        '<div class="critique-result"><strong>🎯 Professional UX Analysis</strong><br><br>' + 
+        data.critique.replace(/\n/g, '<br>') + 
+        '</div>';
+    });
+
+    socket.on('critique error', function(error) {
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('analyzeBtn').innerHTML = '🔍 Analyze Design';
+      
+      document.getElementById('critiqueResults').innerHTML = 
+        '<div class="status-message status-error"><strong>Analysis Failed</strong><br>' + error + '<br><br><button onclick="retryAnalysis()" style="background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">🔄 Try Again</button></div>';
+    });
+
+    function retryAnalysis() {
+      document.getElementById('analyzeBtn').click();
     }
   </script>
 </body>

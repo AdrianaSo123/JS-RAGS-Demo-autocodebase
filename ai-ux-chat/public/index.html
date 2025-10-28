@@ -189,6 +189,109 @@
       0%, 80%, 100% { transform: scale(0.9); opacity: 0.7; }
       40% { transform: scale(1.2); opacity: 1; }
     }
+    
+    /* New styles for image upload and critique */
+    .upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin: 10px 0;
+      background: #f8fafc;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--accent);
+      background: #faf5ff;
+      transform: translateY(-2px);
+    }
+    .upload-area.uploading {
+      border-color: var(--secondary);
+      background: #f0fdf4;
+    }
+    .upload-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .upload-text {
+      color: var(--primary);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    .upload-subtext {
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-top: 5px;
+    }
+    .image-preview {
+      max-width: 300px;
+      max-height: 200px;
+      border-radius: var(--radius);
+      margin: 10px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .critique-container {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+    .critique-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    .critique-content {
+      color: var(--foreground);
+      white-space: pre-wrap;
+    }
+    .critique-content h3 {
+      color: var(--accent);
+      margin: 15px 0 8px 0;
+      font-size: 1rem;
+    }
+    .critique-content strong {
+      color: var(--primary);
+    }
+    .tab-container {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      padding: 0 18px;
+    }
+    .tab-button {
+      padding: 8px 16px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .tab-button.active {
+      background: var(--primary);
+      color: white;
+    }
+    .tab-button:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
     #form {
       display: flex;
       gap: 10px;
@@ -308,15 +411,25 @@
 </head>
 <body style="margin:0; padding:0; min-height:100vh; min-width:100vw; font-family:'Inter', Arial, sans-serif; display:flex; flex-direction:column; min-height:100vh; width:100vw; background:linear-gradient(120deg,#f0f9ff 0%,#faf5ff 45%,#f0fdf4 100%)">
   <!-- NAV BAR -->
-  <nav id="navbar" style="position:fixed;top:0;left:0;width:100%;z-index:100;background:hsl(var(--card));border-bottom:1px solid hsl(var(--primary-100));box-shadow:0 2px 8px rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;">
-    <div style="display:flex;align-items:center;gap:0.75rem;">
-      <span style="font-family:var(--font-mono,'IBM Plex Mono',monospace);font-size:1.6rem;font-weight:700;color:hsl(var(--primary));letter-spacing:var(--tracking-heading-tight);">Portfolio</span>
-      <span style="font-family:var(--font-sans,'Inter',sans-serif);font-size:1.1rem;color:hsl(var(--foreground));opacity:0.8;">/ AI UX Chat</span>
+  <nav id="navbar" style="position:fixed;top:0;left:0;width:100%;z-index:100;background:#ffffff;border-bottom:1px solid #e0f2fe;box-shadow:0 2px 8px rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px;">
+    <div style="display:flex;align-items:center;gap:6px;">
+      <a href="https://autocoderbase-pn33oz77j-adrianaso123s-projects.vercel.app/" style="text-decoration:none;display:flex;align-items:center;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:1.25rem;font-weight:700;color:#0ea5e9;">Portfolio</span>
+      </a>
     </div>
-    <div class="nav-links" style="display:flex;align-items:center;gap:1.5rem;">
-      <a href="/" style="font-family:var(--font-sans,'Inter',sans-serif);color:hsl(var(--primary));font-weight:500;text-decoration:none;border-bottom:1px dotted hsl(var(--primary));transition:border 0.2s;">Home</a>
-      <a href="/reference-projects" style="font-family:var(--font-sans,'Inter',sans-serif);color:hsl(var(--primary));font-weight:500;text-decoration:none;border-bottom:1px dotted hsl(var(--primary));transition:border 0.2s;">Reference Projects</a>
-      <a href="#footer" style="font-family:var(--font-sans,'Inter',sans-serif);color:hsl(var(--primary));font-weight:500;text-decoration:none;border-bottom:1px dotted hsl(var(--primary));transition:border 0.2s;">Contact</a>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <a href="https://autocoderbase-pn33oz77j-adrianaso123s-projects.vercel.app/" style="font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:500;position:relative;padding:0.25rem 0.5rem;text-decoration:none;color:#1f2937;transition:color 0.2s;">
+        <span style="position:relative;z-index:10;">Home</span>
+        <span style="position:absolute;left:0;bottom:0;width:100%;height:2px;background:linear-gradient(to right,#a855f7,#0ea5e9);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;border-radius:9999px;"></span>
+      </a>
+      <a href="https://autocoderbase-pn33oz77j-adrianaso123s-projects.vercel.app/projects" style="font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:500;position:relative;padding:0.25rem 0.5rem;text-decoration:none;color:#0ea5e9;transition:color 0.2s;">
+        <span style="position:relative;z-index:10;">Projects</span>
+        <span style="position:absolute;left:0;bottom:0;width:100%;height:2px;background:linear-gradient(to right,#a855f7,#0ea5e9);transform:scaleX(1);transition:transform 0.3s;transform-origin:left;border-radius:9999px;"></span>
+      </a>
+      <a href="https://autocoderbase-pn33oz77j-adrianaso123s-projects.vercel.app/about" style="font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:500;position:relative;padding:0.25rem 0.5rem;text-decoration:none;color:#1f2937;transition:color 0.2s;">
+        <span style="position:relative;z-index:10;">About</span>
+        <span style="position:absolute;left:0;bottom:0;width:100%;height:2px;background:linear-gradient(to right,#a855f7,#0ea5e9);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;border-radius:9999px;"></span>
+      </a>
     </div>
   </nav>
   <div style="height:64px;"></div> <!-- Spacer for fixed nav -->
@@ -363,17 +476,53 @@
     <h2 style="font-family:'IBM Plex Mono', monospace; font-size:2.2rem; font-weight:700; letter-spacing:-0.03em; margin:0 0 4px 0; color:#fff;">AI UX Professional Chat</h2>
     <div class="subtitle" style="font-size:1.08rem; color:#dbeafe; margin:0 0 10px 0; font-family:'Inter', Arial, sans-serif;">by Adriana So — Portfolio Edition</div>
   </header>
-  <ul id="messages" style="flex:1; width:100%; list-style:none; padding:32px 18px 0 18px; margin:0; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:transparent;"></ul>
-  <form id="form" autocomplete="off" spellcheck="false" style="width:100%; display:flex; gap:10px; padding:18px clamp(10px,4vw,32px) 24px clamp(10px,4vw,32px); background:var(--background); box-shadow:0 -1px 8px #0001; margin:0; flex-shrink:0; border-top:1.5px solid var(--primary); box-sizing:border-box;">
-    <input id="input" autocomplete="off" placeholder="Ask your UX question..." aria-label="Type your UX question here" style="flex:1 1 0%; min-width:0; padding:14px; border-radius:var(--radius); border:1.5px solid var(--primary); font-size:1rem; background:#fff; outline:none; transition:border 0.2s; font-family:'Inter', Arial, sans-serif; color:var(--foreground); box-sizing:border-box;" />
-    <button id="send" aria-label="Send Message" title="Send Message" type="submit" style="padding:13px 26px; border:none; background:var(--accent); color:#fff; font-weight:600; border-radius:var(--radius); font-size:1rem; box-shadow:0 2px 6px #0001; cursor:pointer; transition:background 0.2s, box-shadow 0.2s; font-family:'IBM Plex Mono', monospace; letter-spacing:-0.02em; display:flex; align-items:center; justify-content:center; min-width:0; flex-shrink:1; box-sizing:border-box;">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;"><path d="M2 11L20 2L11 20L10 13L2 11Z" fill="#fff" stroke="#227a4d" stroke-width="1.5" stroke-linejoin="round"/></svg>
-    </button>
-  </form>
+  
+  <!-- Tab Navigation -->
+  <div class="tab-container">
+    <button class="tab-button active" onclick="switchTab('chat')">💬 Chat</button>
+    <button class="tab-button" onclick="switchTab('critique')">🎨 Design Critique</button>
+  </div>
+  
+  <!-- Chat Tab -->
+  <div id="chat-tab" class="tab-content active">
+    <ul id="messages" style="flex:1; width:100%; list-style:none; padding:32px 18px 0 18px; margin:0; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:transparent; min-height: 300px;"></ul>
+    <form id="form" autocomplete="off" spellcheck="false" style="width:100%; display:flex; gap:10px; padding:18px clamp(10px,4vw,32px) 24px clamp(10px,4vw,32px); background:var(--background); box-shadow:0 -1px 8px #0001; margin:0; flex-shrink:0; border-top:1.5px solid var(--primary); box-sizing:border-box;">
+      <input id="input" autocomplete="off" placeholder="Ask your UX question..." aria-label="Type your UX question here" style="flex:1 1 0%; min-width:0; padding:14px; border-radius:var(--radius); border:1.5px solid var(--primary); font-size:1rem; background:#fff; outline:none; transition:border 0.2s; font-family:'Inter', Arial, sans-serif; color:var(--foreground); box-sizing:border-box;" />
+      <button id="send" aria-label="Send Message" title="Send Message" type="submit" style="padding:13px 26px; border:none; background:var(--accent); color:#fff; font-weight:600; border-radius:var(--radius); font-size:1rem; box-shadow:0 2px 6px #0001; cursor:pointer; transition:background 0.2s, box-shadow 0.2s; font-family:'IBM Plex Mono', monospace; letter-spacing:-0.02em; display:flex; align-items:center; justify-content:center; min-width:0; flex-shrink:1; box-sizing:border-box;">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;"><path d="M2 11L20 2L11 20L10 13L2 11Z" fill="#fff" stroke="#227a4d" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+  </div>
+  
+  <!-- Design Critique Tab -->
+  <div id="critique-tab" class="tab-content">
+    <div style="padding: 20px;">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">🎨</div>
+        <div class="upload-text">Upload Your Design or Wireframe</div>
+        <div class="upload-subtext">Drag & drop or click to select • PNG, JPG, WebP • Max 10MB</div>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+      </div>
+      
+      <div id="uploadStatus" style="display: none; text-align: center; margin: 10px 0;"></div>
+      
+      <div id="imagePreview" style="display: none; text-align: center; margin: 15px 0;"></div>
+      
+      <div style="margin: 15px 0;">
+        <input type="text" id="critiquePrompt" placeholder="Optional: Add context about your design goals..." style="width: 100%; padding: 12px; border: 1.5px solid var(--primary); border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 1rem; box-sizing: border-box;">
+      </div>
+      
+      <button id="analyzeBtn" disabled style="width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; box-sizing: border-box;">
+        🔍 Analyze Design
+      </button>
+      
+      <div id="critiqueResults" style="margin-top: 20px;"></div>
+    </div>
+  </div>
   </div>
   </main>
   <!-- FOOTER -->
-  <footer style="width:100vw; background:rgba(255,255,255,0.96); border-top:1.5px solid #e0f2fe; box-shadow:0 -2px 12px #bae6fd33; font-family:'IBM Plex Mono', monospace; font-size:1rem; color:#374151; padding:1.2rem 0 1.2rem 0; margin-top:0; display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+  <footer id="footer" style="width:100%; background:rgba(255,255,255,0.7); border-top:1px solid #e0f2fe; font-family:'IBM Plex Mono', monospace; font-size:0.875rem; color:#374151; padding:0.75rem 0; margin-top:0; display:flex; flex-direction:column; align-items:center;">
     <div>&copy; 2025 Adriana So. All rights reserved.</div>
     <div style="display:flex; gap:1.5rem; align-items:center;">
       <a href="https://www.linkedin.com/in/adriana-so-24071219b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="color:#0369a1; transition:color 0.18s;"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.062-1.867-3.062-1.868 0-2.154 1.459-2.154 2.967v5.699h-3v-10h2.881v1.367h.041c.401-.762 1.379-1.562 2.841-1.562 3.04 0 3.601 2.002 3.601 4.604v5.591z"/></svg></a>
@@ -388,7 +537,23 @@
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
     let typingIndicator = null;
+    let currentTab = 'chat';
+    let uploadedFile = null;
 
+    // Tab switching functionality
+    function switchTab(tab) {
+      currentTab = tab;
+      
+      // Update tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(tab + '-tab').classList.add('active');
+    }
+
+    // Chat functionality
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       if (!input.value) return;
@@ -433,6 +598,153 @@
         typingIndicator = null;
       }
     }
+
+    // Image upload functionality
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const imagePreview = document.getElementById('imagePreview');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const critiquePrompt = document.getElementById('critiquePrompt');
+    const critiqueResults = document.getElementById('critiqueResults');
+
+    // Upload area click
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileSelect(files[0]);
+      }
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+      }
+    });
+
+    function handleFileSelect(file) {
+      if (!file.type.startsWith('image/')) {
+        showUploadStatus('Please select an image file.', 'error');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showUploadStatus('File size must be less than 10MB.', 'error');
+        return;
+      }
+
+      uploadFile(file);
+    }
+
+    function uploadFile(file) {
+      const formData = new FormData();
+      formData.append('design', file);
+
+      uploadArea.classList.add('uploading');
+      showUploadStatus('Uploading...', 'info');
+      
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        uploadArea.classList.remove('uploading');
+        
+        if (data.success) {
+          uploadedFile = data;
+          showImagePreview(data.url, data.originalName);
+          showUploadStatus(`✅ ${data.originalName} uploaded successfully!`, 'success');
+          analyzeBtn.disabled = false;
+          analyzeBtn.style.background = 'var(--accent)';
+          analyzeBtn.style.cursor = 'pointer';
+        } else {
+          showUploadStatus('Upload failed: ' + data.error, 'error');
+        }
+      })
+      .catch(error => {
+        uploadArea.classList.remove('uploading');
+        showUploadStatus('Upload failed. Please try again.', 'error');
+        console.error('Upload error:', error);
+      });
+    }
+
+    function showUploadStatus(message, type) {
+      uploadStatus.style.display = 'block';
+      uploadStatus.textContent = message;
+      uploadStatus.style.color = type === 'error' ? '#dc2626' : type === 'success' ? '#16a34a' : '#0ea5e9';
+    }
+
+    function showImagePreview(url, filename) {
+      imagePreview.style.display = 'block';
+      imagePreview.innerHTML = `
+        <img src="${url}" alt="${filename}" class="image-preview">
+        <div style="font-size: 0.875rem; color: #64748b; margin-top: 5px;">${filename}</div>
+      `;
+    }
+
+    // Analyze design button
+    analyzeBtn.addEventListener('click', () => {
+      if (!uploadedFile) return;
+      
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = '🔍 Analyzing...';
+      analyzeBtn.style.background = '#9ca3af';
+      
+      critiqueResults.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Analyzing your design... This may take a moment.</div>';
+      
+      socket.emit('analyze design', {
+        filename: uploadedFile.filename,
+        userPrompt: critiquePrompt.value
+      });
+    });
+
+    // Handle design critique response
+    socket.on('design critique', (data) => {
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = '🔍 Analyze Design';
+      analyzeBtn.style.background = 'var(--accent)';
+      
+      critiqueResults.innerHTML = `
+        <div class="critique-container">
+          <div class="critique-title">🎯 AI UX Design Critique</div>
+          <div class="critique-content">${data.critique}</div>
+          <div style="margin-top: 15px; font-size: 0.875rem; color: #64748b;">
+            Analysis completed on ${new Date(data.timestamp).toLocaleString()}
+          </div>
+        </div>
+      `;
+    });
+
+    socket.on('critique error', (error) => {
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = '🔍 Analyze Design';
+      analyzeBtn.style.background = 'var(--accent)';
+      
+      critiqueResults.innerHTML = `
+        <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; border-radius: var(--radius); color: #dc2626;">
+          Error: ${error}
+        </div>
+      `;
+    });
+
+    // Make switchTab function globally available
+    window.switchTab = switchTab;
   </script>
 </body>
 </html>
