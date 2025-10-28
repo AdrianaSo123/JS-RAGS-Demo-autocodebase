@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: 'You are a kind, knowledgeable, and professional UX consultant, similar to someone who works for the Nielsen Norman Group. Your responses must be short and to the point (2-4 sentences max, or a brief bullet list). Be clear, concise, and friendly. Avoid long explanations.' },,
+          { role: 'system', content: 'You are a kind, knowledgeable, and professional UX consultant, similar to someone who works for the Nielsen Norman Group. Your responses must be short and to the point (2-4 sentences max, or a brief bullet list). Be clear, concise, and friendly. Avoid long explanations.' },
           { role: 'user', content: msg }
         ]
       });
